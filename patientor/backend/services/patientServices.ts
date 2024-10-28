@@ -10,6 +10,31 @@ export function getAllWithoutSSN(): PatientWithoutSSN[] {
   return patientsWithoutSSN;
 }
 
+export function getById(id: string): Patient | undefined {
+  const patient: Patient | undefined = patientsData.find((patient: Patient) => patient.id === id);
+  if(!patient) {
+    return undefined;
+  }
+
+  return patient;
+}
+
+
+export function getByIdWithoutSSN(id: string): PatientWithoutSSN | undefined {
+  const patient: Patient | undefined = patientsData.find((patient: Patient) => patient.id === id);
+  if(!patient) {
+    return undefined;
+  }
+  const patientWithoutSSN: PatientWithoutSSN = {
+    id: patient.id,
+    name: patient.name,
+    dateOfBirth: patient.dateOfBirth,
+    occupation: patient.occupation,
+    gender: patient.gender
+  };
+  return patientWithoutSSN;
+}
+
 export function addPatient(newPatient: Patient): Patient {
   patientsData.push(newPatient);
   return newPatient;
