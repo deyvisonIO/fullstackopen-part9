@@ -1,15 +1,15 @@
 import { Favorite, MedicalServices, Work } from "@mui/icons-material";
 import { Diagnosis, Entry, HealthCheckEntry, HospitalEntry, OccupationalHealthcareEntry } from "../types";
 import { ReactNode } from "react";
-import { Button } from "@mui/material";
+import { Box, Button, Container } from "@mui/material";
 
 export const Entries = ({ entries, diagnoses }: { entries: Entry[], diagnoses: Diagnosis[] }) => {
   return (
-    <div>
+    <Container>
       <h3>entries</h3>
       {entries.length > 0 && entries.map(entry => <EntryItem key={entry.id} entry={entry} diagnoses={diagnoses} />)}  
       <Button color="primary" variant="contained">ADD NEW ENTRY</Button>
-    </div>
+    </Container>
   );
 };
 
@@ -31,14 +31,14 @@ const HospitalEntryItem = ({ entry, diagnoses }: { entry: HospitalEntry, diagnos
   console.log("hospital:", entry);
 
   return (
-    <div style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
+    <Box style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
       <p>{entry.date} <MedicalServices /> </p> 
       <p>{entry.description}</p>
       <ul>
         {entry.diagnosisCodes ? entry.diagnosisCodes.map(code => <li key={code}>{code} {diagnoses?.find(diagnosis => diagnosis.code === code)?.name ?? null}</li>) : null}
       </ul>
       <span>diagnose by {entry.specialist}</span>
-    </div> 
+    </Box> 
   );
 };
 
@@ -46,13 +46,13 @@ const OccupationalEntryItem  = ({ entry, diagnoses }: { entry: OccupationalHealt
   console.log("occupational:", entry);
 
   return (
-    <div style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
+    <Box style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
       <p>{entry.date} <Work /></p> 
       <p>{entry.description}</p>
       <ul>
         {entry.diagnosisCodes ? entry.diagnosisCodes.map(code => <li key={code}>{code} {diagnoses?.find(diagnosis => diagnosis.code === code)?.name ?? null}</li>) : null}
       </ul>
-    </div> 
+    </Box> 
   );
 };
 
@@ -76,7 +76,7 @@ const HealthCheckEntryItem  = ({ entry, diagnoses }: { entry: HealthCheckEntry, 
   }
 
   return (
-    <div style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
+    <Box style={{ border: "1px solid black", padding: "4px", margin: "8px 0 8px 0" }}>
       <p>{entry.date} <MedicalServices /></p>
       <p>{entry.description}</p>
       {icon}
@@ -84,6 +84,6 @@ const HealthCheckEntryItem  = ({ entry, diagnoses }: { entry: HealthCheckEntry, 
         {entry.diagnosisCodes ? entry.diagnosisCodes.map(code => <li key={code}>{code} {diagnoses?.find(diagnosis => diagnosis.code === code)?.name ?? null}</li>) : null}
       </ul>
       <span>diagnose by {entry.specialist}</span>
-    </div> 
+    </Box> 
   );
 };

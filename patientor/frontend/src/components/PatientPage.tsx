@@ -5,6 +5,8 @@ import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
 import { Female, Male, Transgender } from "@mui/icons-material";
 import { Entries } from "./Entries";
+import AddEntry from "./AddEntry";
+import { Container } from "@mui/material";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient | null>(null);
@@ -28,17 +30,18 @@ const PatientPage = () => {
   console.log(patient);
 
   return (
-    <div>
+    <Container>
       <h1>
         {patient.name}
         {patient.gender === "male" && <Male />}
         {patient.gender === "female" && <Female />}
         {patient.gender === "other" && <Transgender />}
       </h1>
+      <AddEntry />
       <p>ssn: {patient.ssn}</p>
       <p>occupation: {patient.occupation}</p>
       <Entries entries={patient.entries} diagnoses={diagnoses}/>
-    </div>
+    </Container>
   );
 };
 

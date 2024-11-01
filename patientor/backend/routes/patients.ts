@@ -1,8 +1,8 @@
 import express, { Response } from "express";
-import { Patient, PatientWithoutSSN } from "../types";
-import { addPatient, getAllWithoutSSN, getById } from "../services/patientServices";
+import { Entry, Patient, PatientWithoutSSN } from "../types";
+import { addEntry, addPatient, getAllWithoutSSN, getById } from "../services/patientServices";
 import { v1 as uuid } from "uuid";
-import { parsePatient } from "../guards";
+import { parseEntry, parsePatient } from "../guards";
 import { z } from "zod";
 const patientRouter = express.Router();
 
@@ -27,6 +27,39 @@ patientRouter.post("/", express.json(), (req, res) => {
   }
 });
 
+patientRouter.post("/:id/entries", (req, res: Response<Entry | { error: string | z.ZodIssue[] }>) => {
+  const id = req.params.id;
+  const body = req.body as unknown;
+
+  if(!id || !body || !z.string().parse(id)) {
+    res.status(400).send({ error: "malformed parameters" });
+    return;
+  }
+
+  const patient: Patient | undefined = getById(id);
+  if(!patient) {
+    res.status(404).send({ error: "patient not found"});
+    return;
+  }
+
+  try {
+    const parsedEntry = parseEntry(body);
+    const entryId = uuid();
+    const newEntry = addEntry(id, { id: entryId, ...parsedEntry });
+
+    res.json(newEntry);
+
+  } catch(error) {
+    if(error instanceof z.ZodError) {
+      res.status(400).send({ error: error.issues });
+      return;
+    }
+
+    console.log(error);
+    res.status(400).send({ error: "Unknown error"});
+  }
+
+});
 
 patientRouter.get("/:id", (req, res: Response<Patient | { error: string }>) => {
   const id = req.params.id;
@@ -35,6 +68,7 @@ patientRouter.get("/:id", (req, res: Response<Patient | { error: string }>) => {
     return;
   }
   const patient: Patient | undefined = getById(id);
+
   if(!patient) {
     res.status(404).send({ error: "patient not found"});
     return;
@@ -42,5 +76,6 @@ patientRouter.get("/:id", (req, res: Response<Patient | { error: string }>) => {
 
   res.json(patient); 
 });
+
 
 export default patientRouter;

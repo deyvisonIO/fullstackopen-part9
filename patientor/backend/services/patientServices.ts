@@ -1,5 +1,5 @@
 import patientsData from "../patients";
-import { Patient, PatientWithoutSSN } from "../types";
+import { Entry, Patient, PatientWithoutSSN } from "../types";
 
 export function getAll(): Patient[] {
   return patientsData;
@@ -38,4 +38,12 @@ export function getByIdWithoutSSN(id: string): PatientWithoutSSN | undefined {
 export function addPatient(newPatient: Patient): Patient {
   patientsData.push(newPatient);
   return newPatient;
+}
+
+
+export function addEntry(patientId: string, newEntry: Entry): Entry {
+  const indx = patientsData.findIndex(patient => patient.id === patientId);
+  console.log(patientsData[indx]);
+  patientsData[indx].entries.push(newEntry);
+  return newEntry;
 }
