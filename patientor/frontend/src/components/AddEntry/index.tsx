@@ -3,16 +3,24 @@ import { useState } from "react";
 import HospitalEntryForm from "./HospitalEntryForm";
 import OccupationalEntryForm from "./OccupationalEntryForm";
 import HealthCheckEntryForm from "./HealthCheckEntryForm";
+import Notify from "../Notify";
 
 const AddEntry = () => {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState<number>(0);
+  const [notification, setNotification] = useState<string>("");
 
   const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  const notify = (notification: string) => {
+    setNotification(notification);
+    setTimeout(() => setNotification(""), 5000);
+  };
+
   return (
     <>
+      <Notify notification={notification} />
       <Box>
         <Tabs value={value} onChange={handleChange}>
           <Tab label="Hospital" />
@@ -21,13 +29,13 @@ const AddEntry = () => {
         </Tabs>
       </Box>
       <CustomTabPanel value={value} index={0}>
-        <HospitalEntryForm /> 
+        <HospitalEntryForm notify={notify}/> 
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
-        <OccupationalEntryForm /> 
+        <OccupationalEntryForm notify={notify} /> 
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
-       <HealthCheckEntryForm /> 
+       <HealthCheckEntryForm notify={notify} /> 
       </CustomTabPanel>
     </>
   );

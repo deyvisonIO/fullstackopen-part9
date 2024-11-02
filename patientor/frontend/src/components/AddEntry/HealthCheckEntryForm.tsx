@@ -16,12 +16,12 @@ const MenuProps = {
   },
 };
 
-const HealthCheckEntryForm = () => {
+const HealthCheckEntryForm = ({ notify }: { notify: (notification: string) => void }) => {
   const id = useParams().id;
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
-  const [healthCheckRating, setHealthCheckRating] = useState<string>("");
+  const [healthCheckRating, setHealthCheckRating] = useState<number>(0);
   const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
 
   const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
@@ -47,7 +47,7 @@ const HealthCheckEntryForm = () => {
       specialist,
       healthCheckRating: Number(healthCheckRating),
       diagnosisCodes,
-    });
+    }).catch(response => response?.data?.error ? notify(response.data.error) : notify(response.response.data.error[0].message));
   }
 
   const handleDiagnosisCodesChange = (event: SelectChangeEvent<string>) => {
@@ -104,22 +104,23 @@ const HealthCheckEntryForm = () => {
         </InputLabel>
         <Input
           id="Healthcheck Rating"
-          type="text"
+          type="number"
           name="Healthcheck Rating"
           value={healthCheckRating}
-          onChange={(e) => setHealthCheckRating(e.target.value)}
+          onChange={(e) => setHealthCheckRating(Number(e.target.value))}
+          inputProps={{ min: 0, max: 4 }}
         />
       </FormControl>
       <div>
         <FormControl sx={{ m: 1, width: 300 }}>
-          <InputLabel id="demo-multiple-name-label">Name</InputLabel>
+          <InputLabel id="demo-multiple-name-label">Diagnosis Codes</InputLabel>
           <Select
             labelId="diagnosisCodes"
             id="diagnosisCodes"
             multiple
             value={diagnosisCodes}
             onChange={handleDiagnosisCodesChange}
-            input={<OutlinedInput label="Name" />}
+            input={<OutlinedInput label="Diagnosis Codes" />}
             MenuProps={MenuProps}
           >
             {diagnoses.map((diagnosis) => (
